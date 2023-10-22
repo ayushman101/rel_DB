@@ -55,3 +55,17 @@ func init(){
 }
 
 
+//header of BNode
+
+func (node BNode) btype() uint16{
+	return binary.LittleEndian.uint16(node.data)
+}
+
+func (node BNode) nkeys() uint16{
+
+	return binary.LittleEndian.uint16(node.data[2:4])
+}
+
+
+
+
