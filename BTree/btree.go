@@ -163,4 +163,9 @@ func (node BNode) getVal(idx uint16) []byte{
 }
 
 
+//node size in bytes
 
+func (node BNode) nbytes() uint16{
+
+	return node.kvPos(node.nkeys())
+}
