@@ -98,4 +98,30 @@ func (node BNode) setPtr(idx uint16, val uint64) {
 
 }
 
+//offset list is used to locate the KV pairs
+
+func OffsetPos(node BNode, idx uint16) uint16{
+	if idx<1 || idx > node.nkeys() {
+		log.Fatal("index out of bounds")
+		os.Exit(1)
+	}
+
+	return HEADER + 8*node.nkeys() + 2*(idx-1)
+}
+
+//offset to first KV pair is zero. So we don't store it in offset list
+func (node BNode) getOffset(idx uint16) uint16 {
+	if idx==0{
+		return 0
+	}
+	return binary.LittleEndian.Uint16(node.data[Offset(node,idx):])
+}
+
+func (node BNode) setOffset(idx uint16, offset uint16){
+	binary.LittleEndian.PutUint16(node.data[Offset(node,idx):],offset)
+}
+
+
+
+
 
