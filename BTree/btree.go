@@ -122,6 +122,45 @@ func (node BNode) setOffset(idx uint16, offset uint16){
 }
 
 
+//KV pairs
+
+func (node BNode) kvPos(idx uint16) uint16{
+	if idx > node.nkeys() {
+		log.Fatal("index out of bounds")
+		os.Exit(1)
+	}
+
+	return HEADER + 8*node.nkeys() + 2*node.nkeys() + node.getOffset(idx)
+}
+
+
+func (node BNode) getKey(idx uint16) []byte{
+	if idx>node.nkeys() {
+		log.Fatal("Index out of bounds")
+		os.Exit(1);
+	}
+
+	pos:= node.kvPos(idx)
+	klen:= binary.LittleEndian.Uint16(node.data[pos:])
+
+	return node.data[pos:][:klen]
+}
+
+
+func (node BNode) getVal(idx uint16) []byte{
+	if idx>node.nkeys() {
+		log.Fatal("Index out of bounds")
+		os.Exit(1);
+	}
+
+
+	pos:=node.kvPos(idx)
+	klen:= binary.LittleEndian.Uint16(node.data[pos+0:])
+	vlen:= binary.LittleEndian.Uint16(node.data[pos+2:])
+
+	return node.data[pos+4+klen:][:vlen]
+	
+}
 
 
 
